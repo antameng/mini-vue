@@ -3,6 +3,7 @@ import { computed } from "./package/reactivity/computed";
 import { watch } from "./package/reactivity/watch";
 import {ref} from "./package/reactivity/ref";
 import {effect} from "./package/reactivity/effect";
+import {createApp} from "./package/render/renderer";
 
 let app=document.querySelector("#app");
 let obj=reactive({
@@ -38,3 +39,40 @@ setTimeout(()=>{
 // effect(() => {
 //     app.innerHTML=obj.name;
 // })
+
+
+interface  Component {
+    render():Vnode
+    data:object
+    setup:object
+    create():void
+    beforeCreate():void
+    mounted():void
+}
+
+class Vnode {
+    tag:string|Component
+    el?:HTMLElement  //真实Dom
+    key?:string|number
+    text?:string
+    children?:Vnode[]|string
+}
+
+
+effect(() => {
+    let vnode:Vnode={
+        tag:'div',
+        children:[
+            {
+                tag:'h1',
+                text:'hello'
+            },
+            {
+                tag:'h2',
+                text:'world'
+            }
+        ]
+    }
+    createApp(vnode).mount('#app')
+})
+
