@@ -1,8 +1,8 @@
-import {effect} from "./effect";
+import { effect } from "./effect";
 
 export  const  computed=(getter:Function)=>{
         let dirty=true // 缓存 已有依赖的值发生改变才调用
-        let value:any
+        let value
         const _value =  effect(getter,{
             lazy:true,
             scheduler:()=>{
@@ -11,7 +11,7 @@ export  const  computed=(getter:Function)=>{
             }
         })
 
-        class computeRefImp{
+        class ComputedRefImp{
             get value() {
                 if(dirty){
                     value = _value()
@@ -20,5 +20,5 @@ export  const  computed=(getter:Function)=>{
                 return _value
             }
         }
-        return new computeRefImp()
+        return new ComputedRefImp()
 }

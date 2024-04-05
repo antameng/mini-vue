@@ -5,7 +5,7 @@ const isObject = (value: any): boolean =>{
     return value!==null &&typeof value === 'object'
 }
 
-const toReactive = (value) => {
+const toReactive = <T>(value:T) => {
     return isObject(value)?reactive(value):value;
 }
 export  const ref = <T>(value:T)  => {
@@ -13,7 +13,7 @@ export  const ref = <T>(value:T)  => {
 }
 
 class RefTmpl<T> {
-    private  _value:T
+    private  _value:any
     constructor(value) {
         this._value=toReactive(value)
     }

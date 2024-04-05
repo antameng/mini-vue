@@ -1,6 +1,6 @@
 import { reactive } from "./package/reactivity/reactive";
 import { computed } from "./package/reactivity/computed";
-import { watch } from "./package/reactivity/watch";
+import {traverse, watch} from "./package/reactivity/watch";
 import {ref} from "./package/reactivity/ref";
 import {effect} from "./package/reactivity/effect";
 import {createApp} from "./package/render/renderer";
@@ -20,9 +20,7 @@ setTimeout(()=>{
     aaa.value='3333333333'
 },1000)
 
-// watch(obj,(newValue,oldValue) => {
-//     console.log(newValue,oldValue)
-// })
+
 //
 // watch(()=>{  //监听单一制
 //     obj.name
@@ -58,6 +56,35 @@ class Vnode {
     children?:Vnode[]|string
 }
 
+let obj1=reactive({
+    a:{
+        b:{
+            c:{
+                d:{
+                    kk:798
+                },
+                h:423
+            },
+            f:{
+                g:333
+            }
+        },
+        e:123
+    }
+})
+
+watch(obj,(newValue,oldValue) => {
+    console.log(newValue,oldValue,75)
+})
+
+watch(()=>obj.name,(newValue,oldValue) => {
+    console.log(newValue,oldValue,79)
+})
+
+const abv = traverse(obj1)
+console.log(abv,'traverse返回啥')
+// obj1.a.b.c.h=123
+obj.name='张三1111'
 
 effect(() => {
     let vnode:Vnode={

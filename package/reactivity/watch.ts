@@ -1,11 +1,12 @@
 import {effect} from "./effect";
+import {reactive} from "./reactive";
 
 interface  Options{
     immediate?: boolean
     flush: 'sync'|'post'|'pre'
 }
 
-const traverse = (target,seen=new Set()) => {
+export const traverse = (target,seen=new Set()) => {
     if(typeof target!=='object'||target==null||seen.has(target)){
             return
     }
@@ -13,8 +14,10 @@ const traverse = (target,seen=new Set()) => {
     for(let key in target){
         traverse(target[key],seen)
     }
-    return target
+    return seen
+    // return target
 }
+
 export const watch = (target:any,cb:Function,options?:Options) => {
         // 格式化参数，格式化成 getter 函数
         let getter:Function
@@ -36,10 +39,10 @@ export const watch = (target:any,cb:Function,options?:Options) => {
             scheduler:job
         })
         //3、immediate
-        if(options&&options.immediate){
+        if(options && options.immediate){
             job()
-        }else {
-            oldValue=effectFn()
+        } else {
+            oldValue = effectFn()
         }
         
 }
