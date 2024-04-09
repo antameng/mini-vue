@@ -4,6 +4,7 @@ import {traverse, watch} from "./package/reactivity/watch";
 import {ref} from "./package/reactivity/ref";
 import {effect} from "./package/reactivity/effect";
 import {createApp} from "./package/render/renderer";
+import {Vnode} from "./package/render/vnode";
 
 let app=document.querySelector("#app");
 let obj=reactive({
@@ -13,12 +14,12 @@ let obj=reactive({
 
 let aaa=ref('123')
 
-effect(()=>{
-    app.innerHTML=aaa.value;
-})
-setTimeout(()=>{
-    aaa.value='3333333333'
-},1000)
+// effect(()=>{
+//     app.innerHTML=aaa.value;
+// })
+// setTimeout(()=>{
+//     aaa.value='3333333333'
+// },1000)
 
 
 //
@@ -39,22 +40,7 @@ setTimeout(()=>{
 // })
 
 
-interface  Component {
-    render():Vnode
-    data:object
-    setup:object
-    create():void
-    beforeCreate():void
-    mounted():void
-}
 
-class Vnode {
-    tag:string|Component
-    el?:HTMLElement  //真实Dom
-    key?:string|number
-    text?:string
-    children?:Vnode[]|string
-}
 
 let obj1=reactive({
     a:{
@@ -87,7 +73,7 @@ console.log(abv,'traverse返回啥')
 obj.name='张三1111'
 
 effect(() => {
-    let vnode:Vnode={
+    let vnode1:Vnode={
         tag:'div',
         children:[
             {
@@ -100,6 +86,24 @@ effect(() => {
             }
         ]
     }
-    createApp(vnode).mount('#app')
+    let vnode2:Vnode={
+        tag:'div',
+        children:[
+            {
+                tag:'h1',
+                text:'hello'
+            },
+            {
+                tag:'h2',
+                text:'world'
+            },
+            {
+                tag:'h2',
+                text:'wo3333rld'
+            }
+        ]
+    }
+    createApp(vnode1).mount('#app')
+    createApp(vnode2).mount('#app')
 })
 
