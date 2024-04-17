@@ -95,4 +95,4 @@ export const createApp = (vnode) => {
     }
 }
 
-createApp(App).mount(container)
+// createApp(App).mount(container)
