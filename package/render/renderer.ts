@@ -149,6 +149,7 @@ const createRenderer = () => {
             const keytoNewIndexMap = new Map
             for (j = s2; j < s2; j++) {
                 const newChild = newChildren[j]
+                keytoNewIndexMap.set(newChild.key, j)
             }
         }
 
