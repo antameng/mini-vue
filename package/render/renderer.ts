@@ -44,7 +44,11 @@ const createRenderer = () => {
             mountElement(n1, container)
         } else {
             //有n1表示有旧的，即更新
-            patchElement(n1, n2, container)
+            if (typeof n2.children === 'string') {
+                patchChildren(n1, n2, container)
+            } else {
+                patchElement(n1, n2, container)
+            }
         }
     }
     const unMount = (vnode: Vnode) => {
@@ -67,7 +71,8 @@ const createRenderer = () => {
     }
     const patchElement = (n1, n2, container) => {
         const el = n2.el = n1.el  // 将旧的el复制一份给新的el
-        patchChildren(n1, n2, el)
+        // patchChildren(n1, n2, el)
+        patchKeyChildren(n1, n2, el)
     }
 
     const renderer = (vnode, container) => {
@@ -79,6 +84,74 @@ const createRenderer = () => {
             }
         }
         container._vnode = vnode; // 挂载旧的虚拟Dom
+    }
+
+    const isSameVNodeType = (n1, n2) => {
+        if (n1.key === n2.key) {
+            return true
+        }
+        return false
+    }
+
+    const patchKeyChildren = (n1: Vnode, n2: Vnode, container) => {
+
+        let j = 0 // 指针
+        const oldChildren = n1.children as Vnode[] // 旧的vnode集合
+        const newChildren = n2.children as Vnode[] // 新的vnode集合
+
+        let e1 = oldChildren.length - 1
+        let e2 = newChildren.length - 1
+        // 前序
+        while (j <= e1 && j <= e2) {
+            const oldVnode = oldChildren[j]
+            const newVnode = newChildren[j]
+            if (isSameVNodeType(oldVnode, newVnode)) {
+                // 一样就更新
+                patch(oldVnode, newVnode, container)
+            } else {
+                break
+            }
+            j++
+        }
+        // 尾序
+        while (j <= e1 && j <= e2) {
+            const oldVnode = oldChildren[e1]
+            const newVnode = newChildren[e2]
+            if (isSameVNodeType(oldVnode, newVnode)) {
+                // 一样就更新
+                patch(oldVnode, newVnode, container)
+            } else {
+                break  //跳出循环
+            }
+            e1--
+            e2--
+        }
+        //如果j>e1, 表示要新增了，因为新的vnode数量比旧的vnode多 新增
+        if (j > e1) {
+            if (j <= e2) {
+                while (j <= e2) {
+                    patch(null, newChildren[j], container)
+                    j++
+                }
+            }
+        } else if (j > e2) {  // 旧的比新的多，那就是删除
+            // 这时候以旧的为准
+            while (j <= e1) {
+                unMount(oldChildren[j])
+                j++
+            }
+        } else {
+            // 移动的删除的新增的 修改的
+            // 想办法找能复用的节点
+            const s1 = j
+            const s2 = j
+            // 构建映射表  新节点的映射表
+            const keytoNewIndexMap = new Map
+            for (j = s2; j < s2; j++) {
+                const newChild = newChildren[j]
+            }
+        }
+
     }
 
     return {
