@@ -41,7 +41,7 @@ const createRenderer = () => {
     const patch = (n1, n2, container) => {
         if (!n1) {
             // 没n1表示没旧的，即新挂载
-            mountElement(n1, container)
+            mountElement(n2, container)
         } else {
             //有n1表示有旧的，即更新
             if (typeof n2.children === 'string') {
